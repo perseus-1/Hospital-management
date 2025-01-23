@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 1400px;">
+   <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between gap-3">
+            <a href="{% if session['role'] == 'patient' %}/home/patient{% elif session['role'] == 'doctor' %}/home/doctor{% elif session['role'] == 'pharmacist' %}/home/pharmacist{% elif session['role'] == 'receptionist' %}/home/receptionist{% endif %}" 
+               class="btn btn-primary flex-fill consistent-button">Home</a>
+            <a href="/view_prescriptions" class="btn btn-primary flex-fill consistent-button">View Prescriptions</a>
+            <a href="/view_medicine_stock" class="btn btn-primary flex-fill consistent-button">View Medicine Stock</a>
+            <a href="/update_medicine_stock" class="btn btn-primary flex-fill consistent-button">Update Medicine Stock</a>
+        </div>
+    </div>
+    <h1 class="text-center mb-4">Update Medicine Stock</h1>
+      <form method="post">
+        <div class="mb-3">
+            <label for="medicine_id" class="form-label">Medicine ID</label>
+            <input type="text" id="medicine_id" name="medicine_id" class="form-control" required>
+        </div>
+        <div class="mb-3">
+             <label for="action" class="form-label">Action</label>
+            <select class = "form-select" id = "action" name="action" required>
+                <option value ="add"> Add to stock</option>
+                <option value = "remove">Remove from stock</option>
+            </select>
+        </div>
+          <div class="mb-3">
+            <label for="quantity" class="form-label">Quantity</label>
+            <input type="number" id="quantity" name="quantity" class="form-control" required>
+        </div>
+       
+        <button type="submit" class="btn btn-primary w-100 consistent-button">Update Stock</button>
+    </form>
+    <h3 class = "text-center mt-4">Current Stock</h3>
+       {% if medicines %}
+        <ul class="list-group mt-3">
+            {% for medicine in medicines %}
+            <li class="list-group-item">
+                Medicine ID: {{ medicine.medicine_id }}, Name: {{ medicine.medicine_name }}, Company: {{ medicine.company }}, Quantity: {{ medicine.quantity }}
+            </li>
+            {% endfor %}
+        </ul>
+       {% endif %}
+</div>
+
+<style>
+    .container {
+        max-width: 1400px;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 1400px;">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between gap-3">
+            <a href="{% if session['role'] == 'patient' %}/home/patient{% elif session['role'] == 'doctor' %}/home/doctor{% elif session['role'] == 'pharmacist' %}/home/pharmacist{% elif session['role'] == 'receptionist' %}/home/receptionist{% endif %}" 
+            style= "font-size: 20px" class="btn btn-primary flex-fill">Home</a>
+            <a href="/view_records" style= "font-size: 20px; height:60px" class="btn btn-primary flex-fill">View Medical Records </a>
+            <a href="/upload_records" style= "font-size: 20px" class="btn btn-primary flex-fill">Upload Medical Records</a>
+            <a href="/book_appointment" style= "font-size: 20px" class="btn btn-primary flex-fill">Book Appointment</a>
+        </div>
+    </div>
+    <h2 class="text-center mb-4">Book Appointment</h2>
+    <div class="card p-5" style="max-width: 1400px; margin: auto;">
+        <form method="POST">
+            <div class="row g-5">
+                <!-- Calendar Section -->
+                <div class="col-md-6">
+                    <h4 class="text-center mb-4">Select a Date</h4>
+                    <div class="date-grid">
+                        {% for date in dates %}
+                            <div class="date-item {% if date < now.date() %}disabled{% endif %}">
+                                <input type="radio" id="date{{ loop.index }}" name="date" value="{{ date }}" 
+                                    {% if date < now.date() %}disabled{% endif %} 
+                                    {% if loop.index == 1 %}checked{% endif %} required>
+                                <label for="date{{ loop.index }}">{{ date.strftime('%d %b, %Y') }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Time Slot Section -->
+                <div class="col-md-6">
+                    <h4 class="text-center mb-4">Choose a Time Slot</h4>
+                    <div class="slot-grid">
+                        {% for slot in time_slots %}
+                            <div class="slot-item {% if (slot, selected_date) in booked_slots %}booked{% else %}free{% endif %}">
+                                <input type="radio" id="slot{{ loop.index }}" name="time" value="{{ slot }}" 
+                                    {% if loop.index == 1 %}checked{% endif %} required>
+                                <label for="slot{{ loop.index }}">{{ slot }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-4">
+                        <select class="form-select" id="doctor" name="doctor" required>
+                            {% if doctors %}
+                                {% for doctor in doctors %}
+                                    <option value="{{ doctor.username }}">{{ doctor.name }} ({{ doctor.username }})</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                         {% if request.form['time'] and request.form['doctor'] and request.form['date'] %}
+                            {% set is_booked = False %}
+                             {% for app_slot, app_day in booked_slots %}
+                                 {% if app_day == selected_date and app_slot == request.form['time'] %}
+                                       {% set is_booked = True %}
+                                 {% endif %}
+                            {% endfor %}
+                            {% if not is_booked %}
+                                <button type="submit" class="btn btn-primary w-100 mt-3">CONTINUE</button>
+                            {% else %}
+                             <p class="text-center mt-3 text-danger">Slot is booked</p>
+                            {% endif %}
+                        {% else %}
+                         <button type="submit" class="btn btn-primary w-100 mt-3" name = "check_availability">Check Availability</button>
+                        {% endif %}
+                    </div>
+                    <small class="text-muted d-block text-center mt-2">Rescheduling charges may apply.</small>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 1400px;
+    }
+
+    .date-grid, .slot-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); /* Increased columns to avoid overlap */
+        gap: 24px; /* Increased gap for better spacing */
+    }
+
+    .date-item, .slot-item {
+        text-align: center;
+    }
+
+    .date-item input[type="radio"], .slot-item input[type="radio"] {
+        display: none;
+    }
+
+    .date-item label, .slot-item label {
+        display: block;
+        padding: 16px; /* Increased padding for larger clickable areas */
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #f8f9fa;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .date-item.disabled label {
+        color: #aaa;
+        background-color: #e9ecef;
+        pointer-events: none;
+    }
+    
+      .slot-item.booked label {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .slot-item.free label {
+        background-color: #28a745;
+         color: white;
+    }
+
+    input[type="radio"]:checked + label {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+    .card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+</style>
+{% endblock %}

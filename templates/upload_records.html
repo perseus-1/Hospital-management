@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 1400px;">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between gap-3">
+            <a href="{% if session['role'] == 'patient' %}/home/patient{% elif session['role'] == 'doctor' %}/home/doctor{% elif session['role'] == 'pharmacist' %}/home/pharmacist{% elif session['role'] == 'receptionist' %}/home/receptionist{% endif %}" 
+               class="btn btn-primary flex-fill consistent-button">Home</a>
+            <a href="/view_records" class="btn btn-primary flex-fill consistent-button">View Medical Records</a>
+            <a href="/upload_records" class="btn btn-primary flex-fill consistent-button">Upload Medical Records</a>
+            <a href="/book_appointment" class="btn btn-primary flex-fill consistent-button">Book Appointment</a>
+        </div>
+    </div>
+    <h1 class="text-center mb-4">Upload Medical Records</h1>
+    <form action="/upload_records" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="file" class="form-label">Select File</label>
+            <input type="file" id="file" name="file" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 consistent-button">Upload</button>
+    </form>
+    <p class="mt-3 text-center"><a href="/view_records">View Uploaded Records</a></p>
+</div>
+
+<style>
+    .container {
+        max-width: 1400px;
+    }
+</style>
+{% endblock %}

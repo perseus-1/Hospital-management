@@ -1,0 +1,25 @@
+body {
+    background-color: #eef2f3;
+}
+
+h1 {
+    color: #333;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+/* Custom styles for consistent text and button sizes */
+.consistent-text {
+    font-size: 18px; /* Set the standard font size */
+}
+
+.consistent-button {
+    font-size: 20px; /* Set the standard button font size */
+    padding: 14px 24px; /* Standard button padding */
+}
+
+.list-group-item {
+    font-size: 18px;
+}

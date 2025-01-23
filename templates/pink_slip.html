@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 1400px;">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between gap-3">
+            <a href="{% if session['role'] == 'patient' %}/home/patient{% elif session['role'] == 'doctor' %}/home/doctor{% elif session['role'] == 'pharmacist' %}/home/pharmacist{% elif session['role'] == 'receptionist' %}/home/receptionist{% endif %}" 
+               class="btn btn-primary flex-fill consistent-button">Home</a>
+            <a href="/view_appointments" class="btn btn-primary flex-fill consistent-button">Appointments</a>
+            <a href="/update_records" class="btn btn-primary flex-fill consistent-button">Update Medical Records</a>
+            <a href="/pink_slip" class="btn btn-primary flex-fill consistent-button">Pink Slip</a>
+        </div>
+    </div>
+    <h1 class="text-center mb-4">Generate Pink Slip</h1>
+     <form action = "/pink_slip" method="POST">
+         <div class="mb-3">
+            <label for="patient_username" class="form-label">Enter Patient Username</label>
+            <input type="text" id="patient_username" name="patient_username" class="form-control" required>
+        </div>
+         <button type="submit" class="btn btn-primary w-100 consistent-button">Generate</button>
+    </form>
+</div>
+
+<style>
+    .container {
+        max-width: 1400px;
+    }
+</style>
+{% endblock %}

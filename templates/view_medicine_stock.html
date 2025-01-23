@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 1400px;">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between gap-3">
+            <a href="{% if session['role'] == 'patient' %}/home/patient{% elif session['role'] == 'doctor' %}/home/doctor{% elif session['role'] == 'pharmacist' %}/home/pharmacist{% elif session['role'] == 'receptionist' %}/home/receptionist{% endif %}" 
+               class="btn btn-primary flex-fill consistent-button">Home</a>
+            <a href="/view_prescriptions" class="btn btn-primary flex-fill consistent-button">View Prescriptions</a>
+            <a href="/view_medicine_stock" class="btn btn-primary flex-fill consistent-button">View Medicine Stock</a>
+            <a href="/update_medicine_stock" class="btn btn-primary flex-fill consistent-button">Update Medicine Stock</a>
+        </div>
+    </div>
+    <h1 class="text-center mb-4">View Medicine Stock</h1>
+    {% if medicines %}
+        <ul class="list-group">
+            {% for medicine in medicines %}
+            <li class="list-group-item">
+                Medicine ID: {{ medicine.medicine_id }}, Name: {{ medicine.medicine_name }}, Company: {{ medicine.company }}, Quantity: {{ medicine.quantity }}
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-center">No medicines in stock.</p>
+    {% endif %}
+</div>
+
+<style>
+    .container {
+        max-width: 1400px;
+    }
+</style>
+{% endblock %}

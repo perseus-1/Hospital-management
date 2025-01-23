@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 1400px;">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between gap-3">
+            <a href="{% if session['role'] == 'patient' %}/home/patient{% elif session['role'] == 'doctor' %}/home/doctor{% elif session['role'] == 'pharmacist' %}/home/pharmacist{% elif session['role'] == 'receptionist' %}/home/receptionist{% endif %}" 
+               class="btn btn-primary flex-fill consistent-button">Home</a>
+            <a href="/view_schedule" class="btn btn-primary flex-fill consistent-button">View Schedule</a>
+             <a href="/access_records" class="btn btn-primary flex-fill consistent-button">Access Medical Records</a>
+            <a href="/upload_prescription" class="btn btn-primary flex-fill consistent-button">Upload Prescription</a>
+        </div>
+    </div>
+    <h2 class="text-center mb-4">View Schedule</h2>
+   <div class="card p-5" style="max-width: 1400px; margin: auto;">
+        <form method="POST">
+            <div class="row g-5">
+            <!-- Calendar Section -->
+            <div class="col-md-6">
+                <h4 class="text-center mb-4">Select a Date</h4>
+                <div class="date-grid">
+                    {% for date in dates %}
+                        <div class="date-item ">
+                             <input type="radio" id="date{{ loop.index }}" name="date" value="{{ date }}" 
+                                    {% if date == selected_date %}checked{% endif %}
+                             >
+                            <label for="date{{ loop.index }}">{{ date.strftime('%d %b, %Y') }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+             <div class = "col-md-6">
+                    <button type="submit" class="btn btn-primary w-100 mt-3">View Schedule</button>
+                </div>
+             </div>
+        </form>
+        <div class="row g-5">
+               <!-- Time Slot Section -->
+                <div class="col-md-6 mt-5">
+                    <h4 class="text-center mb-4">Time Slots</h4>
+                    <div class="slot-grid">
+                        {% for slot in time_slots %}
+                             <div class="slot-item {% if (slot, selected_date) in booked_slots %}booked{% else %}free{% endif %}">
+                                        <label>{{ slot }}</label>
+                                   </div>
+                         {% endfor %}
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 1400px;
+    }
+
+    .date-grid, .slot-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 24px;
+    }
+
+    .date-item, .slot-item {
+        text-align: center;
+    }
+
+    .date-item label, .slot-item label {
+        display: block;
+        padding: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .date-item input[type="radio"] {
+        display: none;
+    }
+
+    .date-item input[type="radio"]:checked + label {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+    .slot-item.booked label {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .slot-item.free label {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+</style>
+{% endblock %}

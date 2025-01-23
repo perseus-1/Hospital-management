@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 1400px;">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between gap-3">
+            <a href="{% if session['role'] == 'patient' %}/home/patient{% elif session['role'] == 'doctor' %}/home/doctor{% elif session['role'] == 'pharmacist' %}/home/pharmacist{% elif session['role'] == 'receptionist' %}/home/receptionist{% endif %}" 
+               class="btn btn-primary flex-fill consistent-button">Home</a>
+            <a href="/view_prescriptions" class="btn btn-primary flex-fill consistent-button">View Prescriptions</a>
+            <a href="/view_medicine_stock" class="btn btn-primary flex-fill consistent-button">View Medicine Stock</a>
+            <a href="/update_medicine_stock" class="btn btn-primary flex-fill consistent-button">Update Medicine Stock</a>
+        </div>
+    </div>
+    <h1 class="text-center mb-4">View Uploaded Prescriptions</h1>
+    <form action = "/view_prescriptions" method="POST">
+     <div class="mb-3">
+            <label for="patient_username" class="form-label">Enter Patient Username</label>
+            <input type="text" id="patient_username" name="patient_username" class="form-control" required>
+        </div>
+      <button type="submit" class="btn btn-primary w-100 consistent-button">View Prescriptions</button>
+    </form>
+    {% if prescriptions %}
+    <h3 class="text-center mt-5 mb-3">Prescriptions for: {{patient_username}}</h3>
+        <ul class="list-group">
+            {% for prescription in prescriptions %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ prescription.filename }}
+                <a href="/view_prescription/{{ prescription.id }}"  class="btn btn-sm btn-primary">View</a>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-center mt-3">No prescriptions uploaded for this patient</p>
+    {% endif %}
+</div>
+
+<style>
+    .container {
+        max-width: 1400px;
+    }
+</style>
+{% endblock %}

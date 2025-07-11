@@ -58,8 +58,9 @@ some screenshots
 
 ##  Setup Instructions
 
+clone the repo
+
 open cmd at the project directory and run with , python app.py
 
 
-### 1. Clone the Repository
 
